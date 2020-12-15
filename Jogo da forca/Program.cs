@@ -7,39 +7,41 @@ namespace Jogo_da_forca
     {
         static void Main(string[] args)
         {
-            string[] palavras = { "ar", "gas", "casa", "futebol" };
-            //amazena a palavra e a letra selecionada
-            string palavra = "", letra = "";
-
-            int erros = 0, completo = 0, posicao = 0;
-            //bool para manter o loop do game
-            bool sair = false;
-            const int Limite = 7;
-            Random rnd = new Random();
-
-            //escolha vai receber um valor de 0 a 3 que esse valor sera definido para que palavra receba 
-            //uma das palavras que esta associada no endereço do vetor palavras
-            int escolha = rnd.Next(0, 3);
-            palavra = palavras[escolha];
-            //aqui usamos Length, palavra vai armazenar o numero de caracteres que a palavra te
-            string[] quebrada = new string[palavra.Length];
-
-            while (!sair)
+            try
             {
-                Console.Clear();
-                Console.WriteLine("Erros: " + erros + " de " + Limite);
+                string[] palavras = { "ar", "gas", "casa", "futebol" };
+                //amazena a palavra e a letra selecionada
+                string palavra = "", letra = "";
 
-                for (int i = 0; i < quebrada.Length; i++)
+                int erros = 0, completo = 0, posicao = 0;
+                //bool para manter o loop do game
+                bool sair = false;
+                const int Limite = 7;
+                Random rnd = new Random();
+
+                //escolha vai receber um valor de 0 a 3 que esse valor sera definido para que palavra receba 
+                //uma das palavras que esta associada no endereço do vetor palavras
+                int escolha = rnd.Next(0, 3);
+                palavra = palavras[escolha];
+                //aqui usamos Length, palavra vai armazenar o numero de caracteres que a palavra te
+                string[] quebrada = new string[palavra.Length];
+
+                while (!sair)
                 {
-                    if (quebrada[i] != null)
+                    Console.Clear();
+                    Console.WriteLine("Erros: " + erros + " de " + Limite);
+
+                    for (int i = 0; i < quebrada.Length; i++)
                     {
-                        Console.Write(quebrada[i] + " ");
+                        if (quebrada[i] != null)
+                        {
+                            Console.Write(quebrada[i] + " ");
+                        }
+                        else
+                        {
+                            Console.Write("_ ");
+                        }
                     }
-                    else
-                    {
-                        Console.Write("_ ");
-                    }
-                }
                     Console.WriteLine("\nEscolha a posição da letra!");
                     posicao = int.Parse(Console.ReadLine());
                     Console.WriteLine("Digite a letra: ");
@@ -66,19 +68,27 @@ namespace Jogo_da_forca
                     {
                         sair = true;
                     }
-                
+
+                }
+                if (completo == palavra.Length)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Parabens voce acertou a palavra " + palavra);
+                }
+                else if (erros == Limite)
+                {
+                    Console.Clear();
+                    Console.WriteLine("Voce foi enforcado a palavra era " + palavra);
+                }
             }
-            if (completo == palavra.Length)
+            catch(FormatException e)
             {
-                Console.Clear();
-                Console.WriteLine("Parabens voce acertou a palavra " + palavra);
+                Console.WriteLine("O sistema so aceita numeros para definir posição! " + e.Message);
             }
-            else if (erros == Limite)
+            catch(ArgumentOutOfRangeException e)
             {
-                Console.Clear();
-                Console.WriteLine("Voce foi enforcado a palavra era " + palavra);
+                Console.WriteLine("Valor digitado acima do numero de letras! " + e.Message);
             }
-            
         }
     }
 }
