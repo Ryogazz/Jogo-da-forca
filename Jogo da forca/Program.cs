@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Linq;
+using System.IO;
 
 namespace Jogo_da_forca
 {
@@ -9,7 +10,14 @@ namespace Jogo_da_forca
         {
             try
             {
-                string[] palavras = { "ar", "gas", "casa", "futebol" };
+                Console.WriteLine("Digite o endereço do arquivo");
+                string endereco = Console.ReadLine();
+                int ContarV(string p)
+                {
+                    return p.Count(x => ((x == 'a') || (x == 'e') || (x == 'i') || (x == 'o') || (x == 'u')));
+                }
+                
+                string[] palavras = File.ReadAllLines(endereco);
                 //amazena a palavra e a letra selecionada
                 string palavra = "", letra = "";
 
@@ -21,11 +29,17 @@ namespace Jogo_da_forca
 
                 //escolha vai receber um valor de 0 a 3 que esse valor sera definido para que palavra receba 
                 //uma das palavras que esta associada no endereço do vetor palavras
-                int escolha = rnd.Next(0, 3);
+                int n = 0;
+                foreach (string lines in palavras)
+                {
+                    n++;
+                }
+
+                int escolha = rnd.Next(0, n);
                 palavra = palavras[escolha];
                 //aqui usamos Length, palavra vai armazenar o numero de caracteres que a palavra te
                 string[] quebrada = new string[palavra.Length];
-
+                int cont = 0;
                 while (!sair)
                 {
                     Console.Clear();
@@ -40,45 +54,59 @@ namespace Jogo_da_forca
                         else
                         {
                             Console.Write("_ ");
+                            cont++;
                         }
+
                     }
-                    Console.WriteLine("\nEscolha a posição da letra!");
-                    posicao = int.Parse(Console.ReadLine());
-                    Console.WriteLine("Digite a letra: ");
-                    letra = Console.ReadLine();
+                    Console.WriteLine("\nA palavra possui " + cont + " letras");
 
-                    //verificando se a letra na posiçao digitaa corresponde a palavra que foi selecionada.
-
-                    if (palavra.ElementAt(posicao - 1) == letra.ElementAt(0))
+                    Console.Write("Deseja ajuda? (s/n) ");
+                    String ajuda = Console.ReadLine();
+                    if (ajuda == "s")
                     {
-                        quebrada[posicao - 1] = letra;
-                        completo++;
+                        int NV = ContarV(palavra);
+                        Console.WriteLine("A palavra possui " + NV + "Vogais");
                     }
                     else
                     {
-                        erros++;
-                    }
+                        Console.WriteLine("\nEscolha a posição da letra!");
+                        posicao = int.Parse(Console.ReadLine());
+                        Console.WriteLine("Digite a letra: ");
+                        letra = Console.ReadLine();
 
-                    if (erros >= Limite)
-                    {
-                        sair = true;
-                    }
+                        //verificando se a letra na posiçao digitaa corresponde a palavra que foi selecionada.
 
+                        if (palavra.ElementAt(posicao - 1) == letra.ElementAt(0))
+                        {
+                            quebrada[posicao - 1] = letra;
+                            completo++;
+                        }
+                        else
+                        {
+                            erros++;
+                        }
+
+                        if (erros >= Limite)
+                        {
+                            sair = true;
+                        }
+
+                        if (completo == palavra.Length)
+                        {
+                            sair = true;
+                        }
+
+                    }
                     if (completo == palavra.Length)
                     {
-                        sair = true;
+                        Console.Clear();
+                        Console.WriteLine("Parabens voce acertou a palavra " + palavra);
                     }
-
-                }
-                if (completo == palavra.Length)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Parabens voce acertou a palavra " + palavra);
-                }
-                else if (erros == Limite)
-                {
-                    Console.Clear();
-                    Console.WriteLine("Voce foi enforcado a palavra era " + palavra);
+                    else if (erros == Limite)
+                    {
+                        Console.Clear();
+                        Console.WriteLine("Voce foi enforcado a palavra era " + palavra);
+                    }
                 }
             }
             catch(FormatException e)
